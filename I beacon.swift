@@ -19,6 +19,7 @@ class ViewController: UIViewController , CLLocationManagerDelegate{
     
     @IBOutlet weak var far: UILabel!
     @IBOutlet weak var far_RSSI: UILabel!
+    @IBOutlet weak var notice: UILabel!
     
     let locationManager = CLLocationManager()
     let region = CLBeaconRegion(proximityUUID: NSUUID(uuidString: "29B723B8-9E11-4A20-AEB7-2AA90368A261") as! UUID , identifier: "")
@@ -46,7 +47,9 @@ class ViewController: UIViewController , CLLocationManagerDelegate{
     
     func locationManager(_ manager: CLLocationManager, didRangeBeacons beacons: [CLBeacon], in region: CLBeaconRegion) {
         let knownBeacons = beacons.filter{ $0.proximity != CLProximity.unknown}
-        if (knownBeacons.count > 0){
+        if (knownBeacons.count >= 3){
+            notice.text="is working now !"
+            
             let beaconNear = knownBeacons[0] as CLBeacon
             let beaconImmediate = knownBeacons[1] as CLBeacon
             let beaconFar = knownBeacons[2] as CLBeacon
@@ -59,7 +62,8 @@ class ViewController: UIViewController , CLLocationManagerDelegate{
             
             far.text=String(beaconFar.minor.intValue)
             far_RSSI.text=String(beaconFar.rssi)
+        }else{
+            notice.text="Need more than 3 beacons to work !"
+        
         }
     }
-    
-}
